@@ -1,0 +1,21 @@
+la función principal sería el proceso de lavar la ropa, y el efecto secundario sería barrer mientras esperas. Ambos procesos pueden ocurrir simultáneamente, pero uno no interfiere con el otro.
+
+En el contexto de RxJS y el operador tap(), el flujo principal de datos (como los valores emitidos por un observable) sigue su curso, mientras que tap() te permite realizar acciones adicionales (como logging, actualizaciones de estado, etc.) sin alterar esos datos.
+
+Así que, usando tu analogía:
+
+Lavar la ropa: Es el flujo principal de datos (los valores que emite el observable).
+Barrer: Es el efecto secundario que realizas con tap(), que no afecta el proceso de lavado, pero te permite hacer algo útil mientras esperas.
+
+
+ngOnInit(): void { ... }: Este es el método que se ejecuta al inicializar el componente. Es un buen lugar para realizar tareas de configuración, como la suscripción a observables.
+
+this.activatedRoute.params: activatedRoute es un servicio que proporciona información sobre la ruta activa en la que se encuentra el componente. params es un observable que emite un objeto con los parámetros de la ruta. Por ejemplo, si la ruta tiene un parámetro id, este objeto contendrá ese id.
+
+.pipe(...): pipe es un método que permite encadenar operadores de RxJS para transformar o manejar los datos que emite el observable. En este caso, se está utilizando el operador switchMap.
+
+switchMap(...): Este operador se utiliza para transformar los valores emitidos por un observable en otro observable. En este caso, cuando se recibe un nuevo valor de params, se desestructura el objeto para obtener el id y se llama a this.countriesService.searchCountryByAlphaCode(id), que probablemente es un método que realiza una búsqueda de un país utilizando el código alfabético (alpha code) proporcionado.
+
+.subscribe((country) => { ... }): Finalmente, se suscribe al observable resultante de switchMap. Cuando se recibe un valor (en este caso, un objeto country que representa el país encontrado), se ejecuta la función de callback que imprime el país en la consola.
+
+En resumen, este código se encarga de escuchar los cambios en los parámetros de la ruta, extraer el id del país, buscar información sobre ese país utilizando un servicio y luego imprimir la información del país en la consola. Es una forma común de manejar la navegación y la obtención de datos en aplicaciones Angular.
