@@ -1,27 +1,41 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of } from 'rxjs';
-import { Country } from '../interfaces/country';
+import { catchError, delay, map, Observable, of, tap } from 'rxjs';
+import { Country } from '../interfaces/country.interface';
+import { CacheStore } from '../interfaces/cache-store.interface';
+import { Region } from '../interfaces/region.type';
 
 @Injectable({providedIn: 'root'})
 export class CountriesService {
   private apiUrl = 'https://restcountries.com/v3.1';
-  constructor(private http: HttpClient) { }
 
+  public cacheStore: CacheStore = {
+    byCapital: {term: "", countries:[]},
+    byCountries: {term: "", countries:[]},
+    byRegion: {region: '', countries:[]}
+  }
 
-  /*
-  this: Se refiere al contexto actual de la clase en la que se encuentra este código. Es común en TypeScript y JavaScript para acceder a propiedades y métodos de la clase.
+  constructor(private http: HttpClient) {
+    this.loadFromLocalStorage();
+  }
 
-  httpClient: Es una instancia de un servicio que se utiliza para hacer solicitudes HTTP. En Angular, por ejemplo, HttpClient es un servicio que permite realizar peticiones HTTP de manera sencilla.
+  private saveToLocalStorage(){
+    localStorage.setItem('cacheStore', JSON.stringify(this.cacheStore));
+  }
 
-  .get<Country[]>: Este es un método del httpClient que se utiliza para realizar una solicitud HTTP GET. El tipo genérico <Country[]> indica que se espera que la respuesta sea un arreglo de objetos de tipo Country.
+  private loadFromLocalStorage(){
+    if(localStorage.getItem('cacheStore'))
+      return;
+    this.cacheStore = JSON.parse(localStorage.getItem('cacheStore')!);
+  }
 
-  `${this.apiUrl}/capital/${term}`: Esta es una plantilla de cadena (template string) que permite interpolar variables dentro de una cadena. Aquí se está construyendo la URL para la solicitud:
-
-  ${this.apiUrl}: Se refiere a una propiedad de la clase que contiene la URL base de la API.
-  /capital/: Es una parte fija de la URL que indica que se está buscando información sobre capitales.
-  ${term}: Es otra variable que se interpolará en la URL, probablemente representando el término de búsqueda (como el nombre de una capital).
-  */
+  private getCountriesRequest(url:string):Observable<Country[]>{
+    return this.http.get<Country[]>(url)
+    .pipe(
+      //Construye un observable basado en el argumento que mandes
+      catchError(() => of([]) )
+    );
+  }
 
   searchCountryByAlphaCode(code:string):Observable<Country | null>{
     const url = `${this.apiUrl}/alpha/${code}`;
@@ -35,28 +49,28 @@ export class CountriesService {
 
   searchCapital(term:string):Observable<Country[]>{
     const url = `${this.apiUrl}/capital/${term}`;
-    return this.http.get<Country[]>(url)
-    .pipe(
-      //Construye un observable basado en el argumento que mandes
-      catchError(() => of([]) )
-    );
+    return this.getCountriesRequest(url)
+      .pipe(
+        tap(countries => this.cacheStore.byCapital = {term, countries}),
+        tap(() => this.saveToLocalStorage())
+      );
   }
 
   searchCountry(term:string):Observable<Country[]>{
     const url = `${this.apiUrl}/name/${term}`;
-    return this.http.get<Country[]>(url)
+    return this.getCountriesRequest(url)
     .pipe(
-      //Construye un observable basado en el argumento que mandes
-      catchError(() => of([]) )
+      tap(countries => this.cacheStore.byCountries = {term, countries}),
+      tap(() => this.saveToLocalStorage())
     );
   }
 
-  searchRegion(region:string):Observable<Country[]>{
+  searchRegion(region:Region):Observable<Country[]>{
     const url = `${this.apiUrl}/region/${region}`;
-    return this.http.get<Country[]>(url)
+    return this.getCountriesRequest(url)
     .pipe(
-      //Construye un observable basado en el argumento que mandes
-      catchError(() => of([]) )
+      tap(countries => this.cacheStore.byRegion = {region, countries}),
+      tap(() => this.saveToLocalStorage())
     );
   }
 }

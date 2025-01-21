@@ -1,3 +1,57 @@
+   /*
+  this: Se refiere al contexto actual de la clase en la que se encuentra este código. Es común en TypeScript y JavaScript para acceder a propiedades y métodos de la clase.
+
+  httpClient: Es una instancia de un servicio que se utiliza para hacer solicitudes HTTP. En Angular, por ejemplo, HttpClient es un servicio que permite realizar peticiones HTTP de manera sencilla.
+
+  .get<Country[]>: Este es un método del httpClient que se utiliza para realizar una solicitud HTTP GET. El tipo genérico <Country[]> indica que se espera que la respuesta sea un arreglo de objetos de tipo Country.
+
+  `${this.apiUrl}/capital/${term}`: Esta es una plantilla de cadena (template string) que permite interpolar variables dentro de una cadena. Aquí se está construyendo la URL para la solicitud:
+
+  ${this.apiUrl}: Se refiere a una propiedad de la clase que contiene la URL base de la API.
+  /capital/: Es una parte fija de la URL que indica que se está buscando información sobre capitales.
+  ${term}: Es otra variable que se interpolará en la URL, probablemente representando el término de búsqueda (como el nombre de una capital).
+  */
+
+  En Angular, el .pipe se utiliza principalmente en el contexto de programación reactiva con Observables, que son parte de la biblioteca RxJS. El método pipe permite encadenar múltiples operadores para transformar, filtrar o manipular los datos que fluyen a través de un Observable.
+
+  tap es una herramienta que te permite observar lo que está sucediendo en una secuencia de datos sin cambiar nada de esos datos.
+
+Explicación simple:
+Imagina que tienes una cinta transportadora que mueve cajas. tap sería como un observador que se para al lado de la cinta y mira cada caja que pasa, anotando lo que ve, pero sin tocar ni cambiar nada de las cajas. Así, puedes ver lo que está sucediendo en la cinta sin interferir en el proceso.
+
+Ejemplo en la vida real:
+Si estás en una tienda y ves cómo pasan los productos por la caja registradora, puedes anotar los precios de cada producto que pasa, pero no estás cambiando los precios ni los productos. Simplemente estás observando.
+
+----------------------------------------------------------------------------
+
+¡Exactamente! En el contexto de la programación reactiva con RxJS, el flujo es secuencial en el sentido de que las operaciones se ejecutan en el orden en que están definidas, y cada paso depende de la finalización del anterior.
+
+Flujo Secuencial:
+Llamada a la API:
+
+Cuando se llama a searchCountry(term: string), se inicia la solicitud a la API. Este es un proceso asíncrono, pero el código que sigue no se ejecutará hasta que se complete esta solicitud.
+Esperando la Respuesta:
+
+El observable devuelto por getCountriesRequest(url) está "esperando" la respuesta de la API. Durante este tiempo, no se ejecuta ninguna otra acción relacionada con la búsqueda.
+Emisión de Resultados:
+
+Una vez que la API responde y el observable emite los resultados (los países), se pasa al siguiente paso en la cadena de operadores.
+Ejecutando tap:
+
+En este punto, se ejecuta el operador tap, donde se almacena en caché el término de búsqueda y los países obtenidos. Esto ocurre después de que se ha completado la búsqueda.
+Continuación del Flujo:
+
+Si hay más operadores en la cadena (como map, filter, etc.), se ejecutarán en secuencia después de que se haya completado el paso anterior.
+
+Resumen:
+Así que sí, todo el proceso es secuencial: no se pasa al siguiente paso hasta que la operación anterior (en este caso, la búsqueda de países) se ha completado. Esto es una característica fundamental de cómo funcionan los observables en RxJS, lo que permite manejar operaciones asíncronas de manera ordenada y predecible.
+
+tap no cambia el flujo de datos ni hace que las operaciones sean paralelas o no secuenciales. Su propósito principal es permitirte realizar efectos secundarios (como registrar información, almacenar en caché, etc.) sin modificar los datos que fluyen a través del observable.
+Es útil para "interceptar" los datos en el flujo y realizar acciones adicionales, pero siempre se ejecuta en el orden en que se define en la cadena de operadores.
+
+
+
+Tap
 la función principal sería el proceso de lavar la ropa, y el efecto secundario sería barrer mientras esperas. Ambos procesos pueden ocurrir simultáneamente, pero uno no interfiere con el otro.
 
 En el contexto de RxJS y el operador tap(), el flujo principal de datos (como los valores emitidos por un observable) sigue su curso, mientras que tap() te permite realizar acciones adicionales (como logging, actualizaciones de estado, etc.) sin alterar esos datos.

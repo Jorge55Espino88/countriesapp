@@ -1,0 +1,31 @@
+Subject
+ /*
+  Imagina que tienes una caja de juguetes. Un "Subject" en Angular es como una caja especial que puede guardar juguetes (que en este caso son datos) y también puede avisar a otros cuando hay un nuevo juguete dentro.
+
+  Cuando pones un juguete en la caja, todos los amigos que están mirando la caja se enteran de inmediato y pueden jugar con ese nuevo juguete. Así que, un Subject te ayuda a compartir información y a que todos estén al tanto de los cambios, como si estuvieran jugando juntos.
+
+  Así que, en resumen, un Subject es una forma de guardar datos y avisar a otros cuando esos datos cambian. ¡Es muy útil para que todos estén conectados!
+  */
+
+   @Input()
+  public placeholder:string = "";
+
+  //Podemos observar que en primer lugar hicimos un @Input() para que el componente hijo search-box.component.ts recibiera por argumento el valor del placeholder por la plantilla HTML del componente padre by-capital-page.component.html. Posteriormente se realizó un @Output() para la accion inversa, es decir, del hijo al padre y se creo el eventEmitter para emitir el evento al momento de pulsar la tecla ENTER.
+  @Output()
+  public onValue = new EventEmitter<string>();
+
+
+  Debouncer
+  Imagina que estás en un parque y cada vez que alguien te llama, tú corres a ver quién es. Pero si te llaman muchas veces seguidas, te confundes y no sabes a quién atender primero.
+
+  Ahora, piensa en un "debouncer" como un amigo que te dice: "Espera un momento. Solo ve a ver a la persona que te llama si no te llaman de nuevo en un ratito." Así, solo vas a ver a la persona que te llamó si no hay más llamadas en un corto tiempo.
+
+  En el mundo de Angular, un debouncer ayuda a que solo respondas a los cambios de datos (como si te llamaran) después de que ha pasado un pequeño tiempo sin que haya más cambios. Esto evita que te vuelvas loco atendiendo muchas cosas a la vez y hace que todo sea más ordenado.
+
+  Así que, en resumen, un debouncer es una forma de esperar un poco antes de hacer algo, para asegurarte de que no hay más cambios que atender. ¡Es como tener un amigo que te ayuda a no confundirte!
+
+  Las plumas en los estacionamientos funcionan de manera similar a un debouncer. Imagina que estás en un estacionamiento y la pluma no se levanta inmediatamente cuando llegas. En cambio, espera un momento para asegurarse de que no hay más coches tratando de entrar o salir al mismo tiempo. Solo después de ese pequeño tiempo, la pluma se levanta y te deja pasar.
+
+Así que sí, el debouncer es como esa pluma que espera un poco antes de permitir que algo suceda, para asegurarse de que todo esté tranquilo y no haya confusiones.
+
+
