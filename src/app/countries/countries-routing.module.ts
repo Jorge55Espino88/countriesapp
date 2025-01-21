@@ -24,8 +24,12 @@ const routes:Routes = [
     component: CountryPageComponent
   },
   {
-    path: '**',
+    path: '',
     redirectTo: '/by-capital', pathMatch: 'full'
+  },
+  {
+    path: '**',
+    component: ByCapitalPageComponent
   }
 ];
 
