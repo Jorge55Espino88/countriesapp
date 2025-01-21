@@ -25,7 +25,7 @@ const routes:Routes = [
   },
   {
     path: '**',
-    component: ByCapitalPageComponent
+    redirectTo: '/by-capital', pathMatch: 'full'
   }
 ];
 
